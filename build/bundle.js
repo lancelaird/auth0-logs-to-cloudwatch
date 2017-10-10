@@ -82,7 +82,7 @@ module.exports =
 
 	function lastLogCheckpoint(req, res) {
 	  var ctx = req.webtaskContext;
-	  var required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'LOG_INDEX'];
+	  var required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET'];
 	  var missing_settings = required_settings.filter(function (setting) {
 	    return !ctx.data[setting];
 	  });
@@ -95,25 +95,6 @@ module.exports =
 	  req.webtaskContext.storage.get(function (err, data) {
 	    var startFromId = ctx.data.START_FROM ? ctx.data.START_FROM : null;
 	    var startCheckpointId = typeof data === 'undefined' ? startFromId : data.checkpointId;
-
-	    /*
-	      this primes the http request with the eventual message
-	      and necessary HTTP info
-	     */
-	    /*
-	    var optionsFactory = function (body) {
-	      return {
-	        method: 'POST',
-	        url: ctx.data.LOGSTASH_URL,
-	        headers:
-	        {
-	          'cache-control': 'no-cache',
-	          'content-type': 'application/json' },
-	        body: body,
-	        json: true
-	      };
-	    };
-	    */
 
 	    // Start the process.
 	    async.waterfall([function (callback) {
@@ -174,7 +155,6 @@ module.exports =
 	        var url = date.format('YYYY/MM/DD') + '/' + date.format('HH') + '/' + log._id + '.json';
 	        var body = {};
 	        body.post_date = now;
-	        body[ctx.data.LOG_INDEX] = log[ctx.data.LOG_INDEX] || 'auth0';
 	        body.message = JSON.stringify(log);
 
 	        lawger.log(log_stream_name, body.message);
@@ -548,7 +528,7 @@ module.exports =
 	module.exports = {
 		"title": "Auth0 Logs to Logstash Fix",
 		"name": "auth0-logs-to-logstash-fix",
-		"version": "2.0.0",
+		"version": "2.1.0",
 		"author": "saltuk",
 		"description": "This extension will take all of your Auth0 logs and export them to Logstash",
 		"type": "cron",
@@ -565,10 +545,6 @@ module.exports =
 			"BATCH_SIZE": {
 				"description": "The ammount of logs to be read on each execution. Maximun is 100.",
 				"default": 100
-			},
-			"LOG_INDEX": {
-				"description": "Log Index - ID can be found in the LOG url",
-				"required": true
 			},
 			"LOG_LEVEL": {
 				"description": "This allows you to specify the log level of events that need to be sent",

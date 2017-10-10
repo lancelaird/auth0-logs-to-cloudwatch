@@ -1,7 +1,7 @@
 {
   "title": "Auth0 Logs to Logstash Fix",
   "name": "auth0-logs-to-logstash-fix",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "saltuk",
   "description": "This extension will take all of your Auth0 logs and export them to Logstash",
   "type": "cron",
@@ -18,10 +18,6 @@
     "BATCH_SIZE": {
       "description": "The ammount of logs to be read on each execution. Maximun is 100.",
       "default": 100
-    },
-    "LOG_INDEX": {
-      "description": "Log Index - ID can be found in the LOG url",
-      "required": true
     },
     "LOG_LEVEL": {
       "description": "This allows you to specify the log level of events that need to be sent",
