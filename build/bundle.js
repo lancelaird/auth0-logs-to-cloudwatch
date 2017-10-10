@@ -64,28 +64,30 @@ module.exports =
 	var metadata = __webpack_require__(9);
 	var lawgs = __webpack_require__(10);
 
-	var ctx = req.webtaskContext;
-	var aws_access_key = ctx.data.AWS_ACCESS_KEY;
-	var aws_secret_key = ctx.data.AWS_SECRET_KEY;
-	var log_group_name = ctx.data.LOG_GROUP;
-	var log_stream_name = 'AUTH0_DOMAIN';
-
-	lawgs.config({
-	  aws: {
-	    accessKeyId: aws_access_key,
-	    secretAccessKey: aws_secret_key,
-	    region: 'us-east-1'
-	  }
-	});
-
-	var lawger = lawgs.getOrCreate(log_group_name);
+	var lawger = null;
 
 	function lastLogCheckpoint(req, res) {
 	  var ctx = req.webtaskContext;
-	  var required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET'];
+	  var required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'AWS_ACCESS_KEY', 'AWS_SECRET_KEY'];
 	  var missing_settings = required_settings.filter(function (setting) {
 	    return !ctx.data[setting];
 	  });
+
+	  if (!lawger) {
+	    var aws_access_key = ctx.data.AWS_ACCESS_KEY;
+	    var aws_secret_key = ctx.data.AWS_SECRET_KEY;
+	    var log_group_name = ctx.data.LOG_GROUP || 'AUTH0_GROUP';
+	    var _log_stream_name = ctx.data.LOG_STREAM || 'AUTH0_DOMAIN';
+
+	    lawgs.config({
+	      aws: {
+	        accessKeyId: aws_access_key,
+	        secretAccessKey: aws_secret_key,
+	        region: 'us-east-1'
+	      }
+	    });
+	    var _lawger = lawgs.getOrCreate(log_group_name);
+	  }
 
 	  if (missing_settings.length) {
 	    return res.status(400).send({ message: 'Missing settings: ' + missing_settings.join(', ') });
@@ -528,7 +530,7 @@ module.exports =
 	module.exports = {
 		"title": "Auth0 Logs to Logstash Fix",
 		"name": "auth0-logs-to-logstash-fix",
-		"version": "2.1.0",
+		"version": "2.3.0",
 		"author": "saltuk",
 		"description": "This extension will take all of your Auth0 logs and export them to Logstash",
 		"type": "cron",
@@ -747,6 +749,9 @@ module.exports =
 			},
 			"LOG_GROUP": {
 				"description": "Log group"
+			},
+			"LOG_STREAM": {
+				"description": "Log stream"
 			}
 		}
 	};

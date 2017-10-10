@@ -11,26 +11,28 @@ const httpRequest = require('request');
 const metadata = require('./webtask.json');
 const lawgs = require('lawgs');
 
-let ctx = req.webtaskContext;
-let aws_access_key = ctx.data.AWS_ACCESS_KEY;
-let aws_secret_key = ctx.data.AWS_SECRET_KEY;
-let log_group_name = ctx.data.LOG_GROUP;
-let log_stream_name = 'AUTH0_DOMAIN';
-
-lawgs.config({
-  aws: {
-    accessKeyId: aws_access_key,
-    secretAccessKey: aws_secret_key,
-    region: 'us-east-1'
-  }
-});
-
-let lawger = lawgs.getOrCreate(log_group_name);
+let lawger = null;
 
 function lastLogCheckpoint(req, res) {
   let ctx = req.webtaskContext;
-  let required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET'];
+  let required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'AWS_ACCESS_KEY', 'AWS_SECRET_KEY'];
   let missing_settings = required_settings.filter((setting) => !ctx.data[setting]);
+
+  if (!lawger) {
+    let aws_access_key = ctx.data.AWS_ACCESS_KEY;
+    let aws_secret_key = ctx.data.AWS_SECRET_KEY;
+    let log_group_name = ctx.data.LOG_GROUP || 'AUTH0_GROUP';
+    let log_stream_name = ctx.data.LOG_STREAM || 'AUTH0_DOMAIN';
+
+    lawgs.config({
+      aws: {
+        accessKeyId: aws_access_key,
+        secretAccessKey: aws_secret_key,
+        region: 'us-east-1'
+      }
+    });
+    let lawger = lawgs.getOrCreate(log_group_name);
+  }
 
   if (missing_settings.length) {
     return res.status(400).send({ message: 'Missing settings: ' + missing_settings.join(', ') });
