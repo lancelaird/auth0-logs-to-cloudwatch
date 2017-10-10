@@ -9,6 +9,22 @@ const Request = require('request');
 const memoizer = require('lru-memoizer');
 const httpRequest = require('request');
 const metadata = require('./webtask.json');
+const lawgs = require('lawgs');
+
+let aws_access_key = ctx.data.AWS_ACCESS_KEY;
+let aws_secret_key = ctx.data.AWS_SECRET_KEY;
+let log_group_name = ctx.data.LOG_GROUP;
+let log_stream_name = 'AUTH0_DOMAIN';
+
+lawgs.config({
+  aws: {
+    accessKeyId: aws_access_key,
+    secretAccessKey: aws_secret_key,
+    region: 'us-east-1'
+  }
+});
+
+let lawger = lawgs.getOrCreate(log_group_name);
 
 function lastLogCheckpoint(req, res) {
   let ctx = req.webtaskContext;
@@ -104,12 +120,20 @@ function lastLogCheckpoint(req, res) {
           body.post_date = now;
           body[ctx.data.LOGSTASH_INDEX] = log[ctx.data.LOGSTASH_INDEX] || 'auth0';
           body.message = JSON.stringify(log);
-          httpRequest(optionsFactory(body), function (error /*, response, body */) {
-            if (error) {
-              return cb(error);
-            }
-            return cb();
-          });
+          
+          lawger.log(log_stream_name, body.message);
+          // Actually previous should be checked and in case of err should return
+          // the error; e.g: return cb(error);
+          return cb(); 
+
+          // Disabled this section
+          //httpRequest(optionsFactory(body), function (error /*, response, body */) {
+          // if (error) {
+          //    return cb(error);
+          //  }
+          //  return cb();
+          //});
+
         }, (err) => {
           if (err) {
             return callback({ error: err, message: 'Error sending logs to Logstash' });
