@@ -82,7 +82,7 @@ module.exports =
 
 	function lastLogCheckpoint(req, res) {
 	  var ctx = req.webtaskContext;
-	  var required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'LOGSTASH_URL', 'LOGSTASH_INDEX'];
+	  var required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'LOG_INDEX'];
 	  var missing_settings = required_settings.filter(function (setting) {
 	    return !ctx.data[setting];
 	  });
@@ -100,17 +100,20 @@ module.exports =
 	      this primes the http request with the eventual message
 	      and necessary HTTP info
 	     */
-	    var optionsFactory = function optionsFactory(body) {
+	    /*
+	    var optionsFactory = function (body) {
 	      return {
 	        method: 'POST',
 	        url: ctx.data.LOGSTASH_URL,
-	        headers: {
+	        headers:
+	        {
 	          'cache-control': 'no-cache',
 	          'content-type': 'application/json' },
 	        body: body,
 	        json: true
 	      };
 	    };
+	    */
 
 	    // Start the process.
 	    async.waterfall([function (callback) {
@@ -171,7 +174,7 @@ module.exports =
 	        var url = date.format('YYYY/MM/DD') + '/' + date.format('HH') + '/' + log._id + '.json';
 	        var body = {};
 	        body.post_date = now;
-	        body[ctx.data.LOGSTASH_INDEX] = log[ctx.data.LOGSTASH_INDEX] || 'auth0';
+	        body[ctx.data.LOG_INDEX] = log[ctx.data.LOG_INDEX] || 'auth0';
 	        body.message = JSON.stringify(log);
 
 	        lawger.log(log_stream_name, body.message);

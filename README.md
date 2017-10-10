@@ -28,8 +28,7 @@ $ wt cron schedule \
     --secret AUTH0_GLOBAL_CLIENT_SECRET="YOUR_AUTH0_GLOBAL_CLIENT_SECRET" \
     --secret LOG_LEVEL="1" \
     --secret LOG_TYPES="s,f" \
-    --secret LOGSTASH_URL="LOGSTASH_URL" \
-    --secret LOGSTASH_INDEX="LOGSTASH_INDEX" \
+    --secret LOG_INDEX="LOG_INDEX" \
     "*/5 * * * *" \
     build/bundle.js
 ```

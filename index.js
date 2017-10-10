@@ -29,7 +29,7 @@ let lawger = lawgs.getOrCreate(log_group_name);
 
 function lastLogCheckpoint(req, res) {
   let ctx = req.webtaskContext;
-  let required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'LOGSTASH_URL', 'LOGSTASH_INDEX'];
+  let required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'LOG_INDEX'];
   let missing_settings = required_settings.filter((setting) => !ctx.data[setting]);
 
   if (missing_settings.length) {
@@ -45,6 +45,7 @@ function lastLogCheckpoint(req, res) {
       this primes the http request with the eventual message
       and necessary HTTP info
      */
+    /*
     var optionsFactory = function (body) {
       return {
         method: 'POST',
@@ -57,6 +58,7 @@ function lastLogCheckpoint(req, res) {
         json: true
       };
     };
+    */
 
     // Start the process.
     async.waterfall([
@@ -119,7 +121,7 @@ function lastLogCheckpoint(req, res) {
           const url = `${date.format('YYYY/MM/DD')}/${date.format('HH')}/${log._id}.json`;
           var body = {};
           body.post_date = now;
-          body[ctx.data.LOGSTASH_INDEX] = log[ctx.data.LOGSTASH_INDEX] || 'auth0';
+          body[ctx.data.LOG_INDEX] = log[ctx.data.LOG_INDEX] || 'auth0';
           body.message = JSON.stringify(log);
           
           lawger.log(log_stream_name, body.message);
