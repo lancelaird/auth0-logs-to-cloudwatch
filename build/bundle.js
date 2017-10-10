@@ -544,7 +544,7 @@ module.exports =
 	module.exports = {
 		"title": "Auth0 Logs to Logstash Fix",
 		"name": "auth0-logs-to-logstash-fix",
-		"version": "1.8.0",
+		"version": "1.9.0",
 		"author": "saltuk",
 		"description": "This extension will take all of your Auth0 logs and export them to Logstash",
 		"type": "cron",
@@ -765,6 +765,12 @@ module.exports =
 			},
 			"AWS_ACCESS_KEY": {
 				"description": "AWS access key"
+			},
+			"AWS_SECRET_KEY": {
+				"description": "AWS secret key"
+			},
+			"LOG_GROUP": {
+				"description": "Log group"
 			}
 		}
 	};
