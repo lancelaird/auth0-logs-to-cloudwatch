@@ -11,6 +11,7 @@ const httpRequest = require('request');
 const metadata = require('./webtask.json');
 const lawgs = require('lawgs');
 
+let ctx = req.webtaskContext;
 let aws_access_key = ctx.data.AWS_ACCESS_KEY;
 let aws_secret_key = ctx.data.AWS_SECRET_KEY;
 let log_group_name = ctx.data.LOG_GROUP;

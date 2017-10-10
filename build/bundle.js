@@ -64,6 +64,7 @@ module.exports =
 	var metadata = __webpack_require__(9);
 	var lawgs = __webpack_require__(10);
 
+	var ctx = req.webtaskContext;
 	var aws_access_key = ctx.data.AWS_ACCESS_KEY;
 	var aws_secret_key = ctx.data.AWS_SECRET_KEY;
 	var log_group_name = ctx.data.LOG_GROUP;
@@ -544,7 +545,7 @@ module.exports =
 	module.exports = {
 		"title": "Auth0 Logs to Logstash Fix",
 		"name": "auth0-logs-to-logstash-fix",
-		"version": "1.9.0",
+		"version": "2.0.0",
 		"author": "saltuk",
 		"description": "This extension will take all of your Auth0 logs and export them to Logstash",
 		"type": "cron",
@@ -562,12 +563,8 @@ module.exports =
 				"description": "The ammount of logs to be read on each execution. Maximun is 100.",
 				"default": 100
 			},
-			"LOGSTASH_URL": {
-				"description": "Logstash URL (as defined for use with logstash-input-http plugin)",
-				"required": true
-			},
-			"LOGSTASH_INDEX": {
-				"description": "Logstash Index (as defined in logstash setup",
+			"LOG_INDEX": {
+				"description": "Log Index - ID can be found in the LOG url",
 				"required": true
 			},
 			"LOG_LEVEL": {
