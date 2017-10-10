@@ -31,7 +31,7 @@ function lastLogCheckpoint(req, res) {
         region: 'us-east-1'
       }
     });
-    let lawger = lawgs.getOrCreate(log_group_name);
+    lawger = lawgs.getOrCreate(log_group_name);
   }
 
   if (missing_settings.length) {

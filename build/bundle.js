@@ -86,7 +86,7 @@ module.exports =
 	        region: 'us-east-1'
 	      }
 	    });
-	    var _lawger = lawgs.getOrCreate(log_group_name);
+	    lawger = lawgs.getOrCreate(log_group_name);
 	  }
 
 	  if (missing_settings.length) {
@@ -530,7 +530,7 @@ module.exports =
 	module.exports = {
 		"title": "Auth0 Logs to Logstash Fix",
 		"name": "auth0-logs-to-logstash-fix",
-		"version": "2.3.0",
+		"version": "2.4.0",
 		"author": "saltuk",
 		"description": "This extension will take all of your Auth0 logs and export them to Logstash",
 		"type": "cron",
