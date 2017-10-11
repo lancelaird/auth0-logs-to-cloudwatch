@@ -22,7 +22,7 @@ function lastLogCheckpoint(req, res) {
     let aws_access_key = ctx.data.AWS_ACCESS_KEY;
     let aws_secret_key = ctx.data.AWS_SECRET_KEY;
     let log_group_name = ctx.data.LOG_GROUP || 'AUTH0_GROUP';
-    let log_stream_name = ctx.data.LOG_STREAM || 'AUTH0_DOMAIN';
+    let log_stream_name = ctx.data.LOG_STREAM || ctx.data.AUTH0_DOMAIN;
 
     lawgs.config({
       aws: {
@@ -105,23 +105,18 @@ function lastLogCheckpoint(req, res) {
           var body = {};
           body.post_date = now;
           body.message = JSON.stringify(log);
-          
-          lawger.log(log_stream_name, body.message);
-          // Actually previous should be checked and in case of err should return
-          // the error; e.g: return cb(error);
-          return cb(); 
 
-          // Disabled this section
-          //httpRequest(optionsFactory(body), function (error /*, response, body */) {
-          // if (error) {
-          //    return cb(error);
-          //  }
-          //  return cb();
-          //});
+          try {
+            lawger.log(log_stream_name, body.message);
+          }
+          catch (err) {
+            return cb(err);
+          }
+          return cb();
 
         }, (err) => {
           if (err) {
-            return callback({ error: err, message: 'Error sending logs to Logstash' });
+            return callback({ error: err, message: 'Error sending logs to CloudWatch' });
           }
 
           console.log('Upload complete.');
