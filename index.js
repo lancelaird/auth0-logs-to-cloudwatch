@@ -22,7 +22,7 @@ function lastLogCheckpoint(req, res) {
     let aws_access_key = ctx.data.AWS_ACCESS_KEY;
     let aws_secret_key = ctx.data.AWS_SECRET_KEY;
     let log_group_name = ctx.data.LOG_GROUP || 'AUTH0_GROUP';
-    let _log_stream_name = ctx.data.LOG_STREAM || ctx.data.AUTH0_DOMAIN;
+    var log_stream_name = ctx.data.LOG_STREAM || ctx.data.AUTH0_DOMAIN;
 
     lawgs.config({
       aws: {
@@ -107,7 +107,7 @@ function lastLogCheckpoint(req, res) {
           body.message = JSON.stringify(log);
 
           try {
-            lawger.log(_log_stream_name, body.message);
+            lawger.log(log_stream_name, body.message);
           }
           catch (err) {
             return cb(err);

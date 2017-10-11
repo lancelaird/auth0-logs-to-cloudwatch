@@ -77,7 +77,7 @@ module.exports =
 	    var aws_access_key = ctx.data.AWS_ACCESS_KEY;
 	    var aws_secret_key = ctx.data.AWS_SECRET_KEY;
 	    var log_group_name = ctx.data.LOG_GROUP || 'AUTH0_GROUP';
-	    var _log_stream_name2 = ctx.data.LOG_STREAM || ctx.data.AUTH0_DOMAIN;
+	    var log_stream_name = ctx.data.LOG_STREAM || ctx.data.AUTH0_DOMAIN;
 
 	    lawgs.config({
 	      aws: {
@@ -160,7 +160,7 @@ module.exports =
 	        body.message = JSON.stringify(log);
 
 	        try {
-	          lawger.log(_log_stream_name, body.message);
+	          lawger.log(log_stream_name, body.message);
 	        } catch (err) {
 	          return cb(err);
 	        }
