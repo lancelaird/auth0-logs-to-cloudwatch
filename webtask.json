@@ -218,6 +218,9 @@
     "AWS_SECRET_KEY": {
       "description": "AWS secret key"
     },
+    "AWS_REGION": {
+      "description": "AWS cloudwatch region"
+    },
     "LOG_GROUP": {
       "description": "Log group"
     },

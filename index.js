@@ -15,12 +15,13 @@ let lawger = null;
 
 function lastLogCheckpoint(req, res) {
   let ctx = req.webtaskContext;
-  let required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'AWS_ACCESS_KEY', 'AWS_SECRET_KEY'];
+  let required_settings = ['AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET', 'AWS_ACCESS_KEY', 'AWS_SECRET_KEY', 'AWS_REGION'];
   let missing_settings = required_settings.filter((setting) => !ctx.data[setting]);
 
   if (!lawger) {
     let aws_access_key = ctx.data.AWS_ACCESS_KEY;
     let aws_secret_key = ctx.data.AWS_SECRET_KEY;
+    let aws_region = ctx.data.AWS_REGION;
     let log_group_name = ctx.data.LOG_GROUP || 'AUTH0_GROUP';
     var log_stream_name = ctx.data.LOG_STREAM || ctx.data.AUTH0_DOMAIN;
 
@@ -28,7 +29,7 @@ function lastLogCheckpoint(req, res) {
       aws: {
         accessKeyId: aws_access_key,
         secretAccessKey: aws_secret_key,
-        region: 'us-east-1'
+        region: aws_region
       }
     });
     lawger = lawgs.getOrCreate(log_group_name);
