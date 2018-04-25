@@ -2,10 +2,10 @@
   "title": "Auth0 Logs to AWS CloudWatch",
   "name": "auth0-logs-to-cloudwatch",
   "version": "1.0.1",
-  "author": "saltuk, bbeck",
+  "author": "lancelaird",
   "description": "This extension will take all of your Auth0 logs and export them to AWS CloudWatch",
   "type": "cron",
-  "repository": "https://github.com/cyrus-mc/auth0-logs-to-cloudwatch",
+  "repository": "https://github.com/lancelaird/auth0-logs-to-cloudwatch",
   "keywords": [
     "auth0",
     "extension"
